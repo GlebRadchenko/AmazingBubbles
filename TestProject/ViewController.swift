@@ -11,13 +11,19 @@ import AmazingBubbles
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var bubblesView: ContentBubblesView!
+    @IBOutlet weak var bubblesView: ContentBubblesView! {
+        didSet {
+            bubblesView.delegate = self
+            bubblesView.dataSource = self
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bubblesView.delegate = self
-        bubblesView.dataSource = self
         bubblesView.reload(randomizePosition: true)
+        
+        bubblesView.tapEnabled = true
+        bubblesView.panEnabled = true
     }
 
     override func didReceiveMemoryWarning() {
