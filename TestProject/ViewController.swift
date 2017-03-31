@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         bubblesView.delegate = self
         bubblesView.dataSource = self
-        bubblesView.reload()
+        bubblesView.reload(randomizePosition: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,6 +31,8 @@ class ViewController: UIViewController {
 extension ViewController: ContentBubblesViewDelegate {
     func contentBubblesView(_ view: ContentBubblesView, didSelectItemAt index: Int) {
         if let labelView = view.bubbleViews[index] as? LabelBubbleView {
+            labelView.imageView.isHidden = labelView.currentSize == 3
+            labelView.label.isHidden = labelView.currentSize != 3
             labelView.label.text = "Hello, \(index)"
         }
     }
@@ -42,7 +44,7 @@ extension ViewController: ContentBubblesViewDataSource {
     }
     
     func numberOfItems(in view: ContentBubblesView) -> Int {
-        return 10
+        return 15
     }
     
     func addOrUpdateBubbleView(forItemAt index: Int, currentView: BubbleView?) -> BubbleView {

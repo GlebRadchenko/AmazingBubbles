@@ -10,15 +10,17 @@ import UIKit
 
 open class BubbleView: UIView {
     internal var tapGestureRecognizer: UITapGestureRecognizer?
-    internal var currentSize: Int = 1
+    public var currentSize: Int = 1
     
     open override var frame: CGRect {
         didSet {
+            clipsToBounds = true
             setNeedsDisplay()
+            
         }
     }
     
-    var contentColor: UIColor = .red
+    var contentColor: UIColor = UIColor(red: 79 / 255, green: 156 / 255, blue: 213 / 255, alpha: 1)
     
     open override func draw(_ rect: CGRect) {
         let circleRect = rect.insetBy(dx: 1, dy: 1)

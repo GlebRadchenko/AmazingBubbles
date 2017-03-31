@@ -20,7 +20,7 @@ open class ContentBubblesView: UIView {
     open lazy var dynamicItemBehavior: UIDynamicItemBehavior = {
         let itemBehavior = UIDynamicItemBehavior()
         itemBehavior.allowsRotation = false
-        itemBehavior.density = 4
+        itemBehavior.density = 3
         itemBehavior.resistance = 0.4
         itemBehavior.friction = 0
         itemBehavior.elasticity = 0
@@ -98,7 +98,7 @@ open class ContentBubblesView: UIView {
          pushGravityBehavior].forEach { dynamicAnimator.addBehavior($0) }
     }
     
-    open func reload(randomizePosition: Bool = false, randomizeSize: Bool = false) {
+    open func reload(randomizePosition: Bool = false) {
         guard let dataSource = dataSource else {
             removeViewsFromBehaviors()
             removeViews()
@@ -114,6 +114,11 @@ open class ContentBubblesView: UIView {
         
         updatePanState()
         updateTapState()
+        
+        if randomizePosition {
+            self.randomizePosition()
+        }
+        bubbleViews.forEach { $0.layoutIfNeeded() }
     }
 }
 
@@ -135,6 +140,59 @@ extension ContentBubblesView {
         
         return CGSize(width: calculatedWidth,
                       height: calculatedHeight)
+    }
+    
+    func randomizeSize() {
+        bubbleViews.forEach { (view) in
+            let randomSize = Int(arc4random_uniform(UInt32(countOfSizes))) % countOfSizes + 1
+            let size = calculateSize(for: randomSize)
+            view.frame = CGRect(origin: view.frame.origin,
+                                size: size)
+        }
+    }
+    
+    func randomizePosition() {
+        if bubbleViews.count == 1 {
+            let position = randomPosition(for: .center)
+            bubbleViews[0].frame.origin = position
+            return
+        }
+        
+        let leftBubbles = bubbleViews[0..<bubbleViews.count / 2]
+        let rightBubbles = bubbleViews[bubbleViews.count / 2..<bubbleViews.count]
+        
+        leftBubbles.forEach { (view) in
+            let position = randomPosition(for: .left)
+            view.frame.origin = position
+        }
+        
+        rightBubbles.forEach { (view) in
+            let position = randomPosition(for: .right)
+            view.frame.origin = position
+        }
+    }
+    
+    enum BubblePosition {
+        case left, right, center
+    }
+    
+    func randomPosition(for position: BubblePosition) -> CGPoint {
+        let xRand = drand48()
+        let yRand = drand48()
+        
+        let deltaRandY = yRand - drand48()
+        switch position {
+        case .center:
+            let deltaRandX = xRand - drand48()
+            return CGPoint(x: Double(center.x) + deltaRandX * 50,
+                           y: Double(center.y) + deltaRandY * 50)
+        case .left:
+            return CGPoint(x: Double(frame.origin.x) - xRand * Double(bounds.width),
+                           y: Double(center.y) + deltaRandY * Double(bounds.height / 2))
+        case .right:
+            return CGPoint(x: Double(frame.origin.x + frame.width) + xRand * Double(bounds.width),
+                           y: Double(center.y) + deltaRandY * Double(bounds.height / 2))
+        }
     }
 }
 
@@ -277,6 +335,7 @@ public extension ContentBubblesView {
         
         if view.currentSize > 1 {
             pushGravityBehavior.position = view.center
+            pushGravityBehavior.region = UIRegion(radius: view.bounds.width * 3)
             viewsToPush.forEach { pushGravityBehavior.addItem($0) }
         }
         
@@ -291,6 +350,7 @@ public extension ContentBubblesView {
             UIView.animate(withDuration: BubbleConstants.growAnimationDuration, animations: {
                 view.frame = CGRect(origin:newOrigin,
                                     size: newSize)
+                view.layoutSubviews()
                 
             }, completion: { (_) in
                 self.bubbleViews.forEach { self.gravityBehavior.addItem($0) }

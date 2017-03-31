@@ -11,4 +11,5 @@ import AmazingBubbles
 
 class LabelBubbleView: BubbleView {
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
 }
