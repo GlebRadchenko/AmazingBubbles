@@ -21,7 +21,7 @@ open class BubbleView: UIView {
     var contentColor: UIColor = .red
     
     open override func draw(_ rect: CGRect) {
-        let circleRect = rect.insetBy(dx: 2, dy: 2)
+        let circleRect = rect.insetBy(dx: 1, dy: 1)
         let path = UIBezierPath(ovalIn: circleRect)
         contentColor.setFill()
         path.fill()

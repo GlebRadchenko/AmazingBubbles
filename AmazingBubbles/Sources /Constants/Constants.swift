@@ -9,12 +9,12 @@
 import Foundation
 
 public struct BubbleConstants {
-    public static var initialGravityStrength: CGFloat = 5
-    public static var pushGravityStrength: CGFloat = 4
-    public static var panGravityStrength: CGFloat = 7
+    public static var initialGravityStrength: CGFloat = 1
+    public static var pushGravityStrength: CGFloat = 2
+    public static var panGravityStrength: CGFloat = 20
     
-    public static var minimalSizeForItem: CGSize = CGSize(width: 50, height: 50)
-    public static var maximumSizeForItem: CGSize = CGSize(width: 150, height: 150)
+    public static var minimalSizeForItem: CGSize = CGSize(width: 40, height: 40)
+    public static var maximumSizeForItem: CGSize = CGSize(width: 100, height: 100)
     
-    public static var growAnimationDuration: Double = 0.25
+    public static var growAnimationDuration: Double = 0.2
 }

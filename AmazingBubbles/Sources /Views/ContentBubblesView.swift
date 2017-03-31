@@ -20,9 +20,8 @@ open class ContentBubblesView: UIView {
     open lazy var dynamicItemBehavior: UIDynamicItemBehavior = {
         let itemBehavior = UIDynamicItemBehavior()
         itemBehavior.allowsRotation = false
-        itemBehavior.density = 3
+        itemBehavior.density = 4
         itemBehavior.resistance = 0.4
-        itemBehavior.elasticity = 0.5
         return itemBehavior
     }()
     
@@ -31,8 +30,8 @@ open class ContentBubblesView: UIView {
         radialGravity.region = UIRegion(radius: self.bounds.height * 5)
         radialGravity.minimumRadius = self.bounds.height * 5
         radialGravity.strength = BubbleConstants.initialGravityStrength
-        radialGravity.animationSpeed = 2
-        radialGravity.falloff = 0.2
+        radialGravity.animationSpeed = 1
+        radialGravity.falloff = 0.1
         return radialGravity
     }()
     
@@ -47,10 +46,11 @@ open class ContentBubblesView: UIView {
         radialGravity.region = UIRegion(radius: self.bounds.height * 5)
         radialGravity.minimumRadius = self.bounds.height * 5
         radialGravity.strength = -BubbleConstants.pushGravityStrength
-        radialGravity.animationSpeed = 2
+        radialGravity.animationSpeed = 4
         radialGravity.falloff = 0.1
         return radialGravity
     }()
+    
     
     open lazy var panGestureRecognizer: UIPanGestureRecognizer = {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(self.handlePan(_:)))
@@ -58,6 +58,11 @@ open class ContentBubblesView: UIView {
         return pan
     }()
     
+    open override var center: CGPoint {
+        didSet {
+            gravityBehavior.position = center
+        }
+    }
     open var tapEnabled: Bool = true {
         didSet {
             updateTapState()
@@ -97,6 +102,9 @@ open class ContentBubblesView: UIView {
             removeViews()
             return
         }
+        countOfSizes = dataSource.countOfSizes?(in: self) ?? 3
+        minimalSizeForItem = delegate?.minimalSizeForBubble?(in: self) ?? BubbleConstants.minimalSizeForItem
+        maximumSizeForItem = delegate?.maximumSizeForBubble?(in: self) ?? BubbleConstants.maximumSizeForItem
         
         let countOfItems = dataSource.numberOfItems(in: self)
         removeOddViews(for: countOfItems)
@@ -104,10 +112,6 @@ open class ContentBubblesView: UIView {
         
         updatePanState()
         updateTapState()
-        
-        countOfSizes = dataSource.countOfSizes?(in: self) ?? 3
-        minimalSizeForItem = delegate?.minimalSizeForBubble?(in: self) ?? BubbleConstants.minimalSizeForItem
-        maximumSizeForItem = delegate?.maximumSizeForBubble?(in: self) ?? BubbleConstants.maximumSizeForItem
     }
 }
 
@@ -227,11 +231,13 @@ public extension ContentBubblesView {
         case .began:
             gravityBehavior.position = pan.location(in: self)
             gravityBehavior.strength = BubbleConstants.panGravityStrength
+            dynamicItemBehavior.density = 1
         case .changed:
             gravityBehavior.position = pan.location(in: self)
         default:
             gravityBehavior.position = center
             gravityBehavior.strength = BubbleConstants.initialGravityStrength
+            dynamicItemBehavior.density = 7
         }
     }
     
@@ -264,8 +270,6 @@ public extension ContentBubblesView {
         let deltaW = newSize.width - oldSize.width
         let deltaH = newSize.height - oldSize.height
         
-        //TODO: - Add delegate checking
-        
         //set push gravityBehavior position if needed
         let viewsToPush = bubbleViews.filter { $0 != view }
         
@@ -273,9 +277,10 @@ public extension ContentBubblesView {
             pushGravityBehavior.position = view.center
             viewsToPush.forEach { pushGravityBehavior.addItem($0) }
         }
+        
         bubbleViews.forEach { gravityBehavior.removeItem($0) }
         //resize size of item after push
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             viewsToPush.forEach { self.pushGravityBehavior.removeItem($0) }
             self.removeBehaviors(for: view)
             
@@ -288,12 +293,10 @@ public extension ContentBubblesView {
                 
             }, completion: { (_) in
                 self.bubbleViews.forEach { self.gravityBehavior.addItem($0) }
-                self.dynamicAnimator.updateItem(usingCurrentState: view)
+                self.dynamicItemBehavior.addItem(view)
+                self.collisionBehavior.addItem(view)
                 completion()
             })
-            
-            self.dynamicItemBehavior.addItem(view)
-            self.collisionBehavior.addItem(view)
         }
     }
 }

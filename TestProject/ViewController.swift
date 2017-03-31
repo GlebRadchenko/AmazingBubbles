@@ -44,8 +44,8 @@ extension ViewController: ContentBubblesViewDataSource {
     func addOrUpdateBubbleView(forItemAt index: Int, currentView: BubbleView?) -> BubbleView {
         let view = currentView ?? BubbleView()
         view.backgroundColor = .clear
-        let randomOrigin = CGPoint(x: CGFloat(drand48() * Double(view.frame.width * 2 / 3)),
-                                   y: CGFloat(drand48() * Double(view.frame.height * 2 / 3)))
+        let randomOrigin = CGPoint(x: CGFloat(drand48() * Double(self.view.frame.width * 2 / 3)),
+                                   y: CGFloat(drand48() * Double(self.view.frame.height * 2 / 3)))
             
         view.frame = CGRect(origin: randomOrigin,
                             size: .zero)
