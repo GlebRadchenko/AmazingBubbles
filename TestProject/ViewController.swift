@@ -29,7 +29,11 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: ContentBubblesViewDelegate {
-    
+    func contentBubblesView(_ view: ContentBubblesView, didSelectItemAt index: Int) {
+        if let labelView = view.bubbleViews[index] as? LabelBubbleView {
+            labelView.label.text = "Hello, \(index)"
+        }
+    }
 }
 
 extension ViewController: ContentBubblesViewDataSource {
@@ -42,7 +46,15 @@ extension ViewController: ContentBubblesViewDataSource {
     }
     
     func addOrUpdateBubbleView(forItemAt index: Int, currentView: BubbleView?) -> BubbleView {
-        let view = currentView ?? BubbleView()
+        var view: BubbleView! = currentView
+        
+        if view == nil {
+            if let labelView = UINib(nibName: "LabelBubbleView", bundle: nil).instantiate(withOwner: nil, options: nil).first as? LabelBubbleView {
+                labelView.label.text = "Hello!"
+                view = labelView
+            }
+        }
+        
         view.backgroundColor = .clear
         let randomOrigin = CGPoint(x: CGFloat(drand48() * Double(self.view.frame.width * 2 / 3)),
                                    y: CGFloat(drand48() * Double(self.view.frame.height * 2 / 3)))

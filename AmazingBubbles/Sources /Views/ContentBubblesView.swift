@@ -22,6 +22,8 @@ open class ContentBubblesView: UIView {
         itemBehavior.allowsRotation = false
         itemBehavior.density = 4
         itemBehavior.resistance = 0.4
+        itemBehavior.friction = 0
+        itemBehavior.elasticity = 0
         return itemBehavior
     }()
     
@@ -79,7 +81,7 @@ open class ContentBubblesView: UIView {
     open lazy var maximumSizeForItem: CGSize = BubbleConstants.maximumSizeForItem
     open lazy var countOfSizes: Int = 3
     
-    var bubbleViews: [BubbleView] = []
+    open var bubbleViews: [BubbleView] = []
     
     open override func awakeFromNib() {
         super.awakeFromNib()
@@ -283,7 +285,6 @@ public extension ContentBubblesView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             viewsToPush.forEach { self.pushGravityBehavior.removeItem($0) }
             self.removeBehaviors(for: view)
-            
             let newOrigin = CGPoint(x: view.frame.origin.x - deltaW / 2,
                                     y: view.frame.origin.y - deltaH / 2)
             
