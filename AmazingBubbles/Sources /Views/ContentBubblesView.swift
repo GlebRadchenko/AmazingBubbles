@@ -89,6 +89,7 @@ open class ContentBubblesView: UIView {
         addBehaviors()
         updatePanState()
         updateTapState()
+        translatesAutoresizingMaskIntoConstraints = false
     }
     
     open func addBehaviors() {
