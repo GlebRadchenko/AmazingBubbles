@@ -273,27 +273,26 @@ public extension ContentBubblesView {
             pushGravityBehavior.position = view.center
             viewsToPush.forEach { pushGravityBehavior.addItem($0) }
         }
-        
+        bubbleViews.forEach { gravityBehavior.removeItem($0) }
         //resize size of item after push
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.bubbleViews.forEach { self.gravityBehavior.removeItem($0) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             viewsToPush.forEach { self.pushGravityBehavior.removeItem($0) }
             self.removeBehaviors(for: view)
             
             let newOrigin = CGPoint(x: view.frame.origin.x - deltaW / 2,
                                     y: view.frame.origin.y - deltaH / 2)
             
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: BubbleConstants.growAnimationDuration, animations: {
                 view.frame = CGRect(origin:newOrigin,
                                     size: newSize)
                 
             }, completion: { (_) in
+                self.bubbleViews.forEach { self.gravityBehavior.addItem($0) }
                 self.dynamicAnimator.updateItem(usingCurrentState: view)
                 completion()
             })
             
             self.dynamicItemBehavior.addItem(view)
-            self.bubbleViews.forEach { self.gravityBehavior.addItem($0) }
             self.collisionBehavior.addItem(view)
         }
     }

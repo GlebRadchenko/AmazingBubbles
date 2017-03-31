@@ -8,11 +8,13 @@
 
 import Foundation
 
-struct BubbleConstants {
-    static let initialGravityStrength: CGFloat = 5
-    static let pushGravityStrength: CGFloat = 10
-    static let panGravityStrength: CGFloat = 7
+public struct BubbleConstants {
+    public static var initialGravityStrength: CGFloat = 5
+    public static var pushGravityStrength: CGFloat = 4
+    public static var panGravityStrength: CGFloat = 7
     
-    static let minimalSizeForItem: CGSize = CGSize(width: 50, height: 50)
-    static let maximumSizeForItem: CGSize = CGSize(width: 150, height: 150)
+    public static var minimalSizeForItem: CGSize = CGSize(width: 50, height: 50)
+    public static var maximumSizeForItem: CGSize = CGSize(width: 150, height: 150)
+    
+    public static var growAnimationDuration: Double = 0.25
 }
