@@ -8,9 +8,23 @@ Bubble pickers, inspired by Apple
   - XCode 8.0+ 
   - Swift 3.0
   
+## Installation
+AmazingBubbles Library is available through [CocoPods](https://cocoapods.org). To install, add the following line to your Podfile: 
+
+  ``` ruby
+pod 'AmazingBubbles'
+```
+
 ## Usage: 
- 1. Add ContentBubblesView to your VC;
- 2. Add delegate and dataSource for ContentBubblesView instance:
+
+ 1. Import library as follows: 
+ 
+  ``` swift
+  import AmazingBubbles
+```
+
+ 2. Add ContentBubblesView to your VC;
+ 3. Add delegate and dataSource for ContentBubblesView instance:
  
   ``` swift
 class ViewController: UIViewController {
@@ -25,7 +39,7 @@ class ViewController: UIViewController {
 }
 ```
 
- 3. Implement protocols :
+ 4. Implement protocols :
 ``` swift
 public protocol ContentBubblesViewDelegate: class {
     func minimalSizeForBubble(in view: ContentBubblesView) -> CGSize
@@ -65,7 +79,7 @@ extension ViewController: ContentBubblesViewDataSource {
     }
 }
  ```
- 4. And than call:
+ 5. And than call:
  
  ``` swift
  bubblesView.reload(randomizePosition: true) 
