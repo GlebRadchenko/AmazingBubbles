@@ -38,5 +38,5 @@ s.framework = "UIKit"
 s.source_files = "AmazingBubbles/**/*.{swift}"
 
 # 9
-s.resources = "AmazingBubbles/**/*.{png,jpeg,jpg,storyboard,xib}"
+s.resources = "AmazingBubbles/**/*.{png,gif,storyboard,xib}"
 end
