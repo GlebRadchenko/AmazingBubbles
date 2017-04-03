@@ -12,7 +12,7 @@ Bubble pickers, inspired by Apple
 AmazingBubbles Library is available through [CocoPods](https://cocoapods.org). To install, add the following line to your Podfile: 
 
   ``` ruby
-pod 'AmazingBubbles'
+  pod 'AmazingBubbles', '~> 0.0'
 ```
 
 ## Usage: 
