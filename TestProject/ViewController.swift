@@ -20,17 +20,27 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addBubbleView()
         bubblesView.reload(randomizePosition: true)
         
         bubblesView.tapEnabled = true
         bubblesView.panEnabled = true
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func addBubbleView() {
+        guard bubblesView == nil else { return }
+        let contentBubblesView = ContentBubblesView()
+        
+        view.addSubview(contentBubblesView)
+        bubblesView = contentBubblesView
+        
+        bubblesView.translatesAutoresizingMaskIntoConstraints = false
+        bubblesView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        bubblesView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        bubblesView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        bubblesView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-
 
 }
 

@@ -65,6 +65,7 @@ open class ContentBubblesView: UIView {
             gravityBehavior.position = center
         }
     }
+    
     open var tapEnabled: Bool = true {
         didSet {
             updateTapState()
@@ -83,14 +84,35 @@ open class ContentBubblesView: UIView {
     
     open var bubbleViews: [BubbleView] = []
     
+    public init() {
+        super.init(frame: .zero)
+        initialSetup()
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialSetup()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialSetup()
+    }
+    
     open override func awakeFromNib() {
         super.awakeFromNib()
         
+        if dynamicAnimator.behaviors.isEmpty {
+            initialSetup()
+        }
+    }
+    
+    func initialSetup() {
         addBehaviors()
         updatePanState()
         updateTapState()
     }
-    
+        
     open func addBehaviors() {
         [dynamicItemBehavior,
          gravityBehavior,
